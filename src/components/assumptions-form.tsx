@@ -1,30 +1,9 @@
 import React from "react";
-// import { Formik, Form, Field, ErrorMessage } from "formik";
-// import * as Yup from "yup";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-
-interface IAssumptions {
-  startBalance: string;
-  currentAge: number;
-  startAge: number;
-  finalAge: number;
-  withdrawalRate: number;
-  expectedRealReturn: number;
-  expectedInflationRate: number;
-  output: "nominal" | "real";
-}
-
-const initialValues: IAssumptions = {
-  startBalance: "1,000,000",
-  currentAge: 50,
-  startAge: 60,
-  finalAge: 90,
-  withdrawalRate: 3,
-  expectedRealReturn: 2,
-  expectedInflationRate: 2,
-  output: "nominal",
-};
+import { IAssumptions } from "../store/401k-balance";
+import { fetchProjectedBalances } from "../store/401k-balance";
 
 const Form = styled.form`
   box-sizing: border-box;
@@ -36,6 +15,7 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   padding: 18px;
+  height: 565px;
 
   label {
     color: #222;
@@ -64,6 +44,7 @@ const Form = styled.form`
     border-width: 1px;
   }
   input[type="submit"] {
+    outline: none;
     background-color: #111;
     color: white;
     padding: 12px 20px;
@@ -87,6 +68,13 @@ const AssumptionsForm = () => {
     getValues,
     setValue,
   } = useForm<IAssumptions>();
+  const dispatch = useDispatch();
+  const initialValues = useSelector((state: any) => state.assumptions);
+  // const balances = useSelector((state: any) => state.balances);
+  // const fetchErrors = useSelector((state: any) => state.errors);
+  // console.log(initialValues);
+  // console.log(balances);
+  // console.log(fetchErrors);
 
   const onSubmit = (data: Record<string, string>) => {
     // Strip out commas and convert to numbers.
@@ -99,7 +87,7 @@ const AssumptionsForm = () => {
     result.expectedInflationRate /= 100;
     result.output = data.output;
 
-    alert(JSON.stringify(result, null, "  "));
+    dispatch(fetchProjectedBalances(result));
   };
 
   const localizeNumber = (value: string): string => {
