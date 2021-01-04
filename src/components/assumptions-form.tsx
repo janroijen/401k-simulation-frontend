@@ -10,7 +10,7 @@ const Form = styled.form`
   font-size: 12px;
   width: 180px;
   background-color: #eee;
-  border-radius: 6px;
+  border-radius: 3px;
   margin: 10px;
   display: flex;
   flex-direction: column;
@@ -138,14 +138,14 @@ const AssumptionsForm = () => {
         name="startAge"
         ref={register({
           required: true,
-          min: 25,
-          max: 120,
+          min: 60,
+          max: 70,
           pattern: /^[0-9/.]*$/,
         })}
         defaultValue={initialValues.startAge}
         type="text"
       />
-      <p>{errors.startAge && "Between 25 and 120"}</p>
+      <p>{errors.startAge && "Between 60 and 70"}</p>
 
       <label htmlFor="finalAge">Final age (years)</label>
       <input

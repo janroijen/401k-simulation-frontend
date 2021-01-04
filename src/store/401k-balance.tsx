@@ -12,10 +12,10 @@ export interface IAssumptions {
 }
 
 const initialValues: IAssumptions = {
-  startBalance: "1,000,000",
+  startBalance: "500,000",
   currentAge: 50,
   startAge: 60,
-  finalAge: 90,
+  finalAge: 99,
   withdrawalRate: 3,
   expectedRealReturn: 2,
   expectedInflationRate: 2,

@@ -3,6 +3,7 @@ import { Provider } from "react-redux";
 import { store } from "./store/store";
 import Basic from "./components/assumptions-form";
 import Table from "./components/balances-table";
+import Test from "./components/react-vis-test";
 
 import styled from "styled-components";
 
@@ -17,6 +18,7 @@ function App() {
     <Container className="App">
       <Provider store={store}>
         <Basic />
+        <Test />
         <Table />
       </Provider>
     </Container>
