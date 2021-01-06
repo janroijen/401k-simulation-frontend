@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { IAssumptions } from "../store/401k-balance";
 import { fetchProjectedBalances } from "../store/401k-balance";
+import colors from "../styles/colors";
 
 const Form = styled.form`
   box-sizing: border-box;
   font-size: 12px;
   width: 180px;
-  background-color: #eee;
+  background-color: ${colors.tints[13]};
   border-radius: 3px;
   margin: 10px;
   display: flex;
@@ -18,7 +19,7 @@ const Form = styled.form`
   height: 565px;
 
   label {
-    color: #222;
+    color: ${colors.tints[0]};
     text-align: left;
     margin-bottom: 3px;
     margin-left: 3px;
@@ -45,7 +46,7 @@ const Form = styled.form`
   }
   input[type="submit"] {
     outline: none;
-    background-color: #111;
+    background-color: ${colors.tints[3]};
     color: white;
     padding: 12px 20px;
     cursor: pointer;
@@ -56,7 +57,7 @@ const Form = styled.form`
     margin-top: 20px;
   }
   input[type="submit"]:hover {
-    opacity: 70%;
+    background-color: ${colors.tints[6]};
   }
 `;
 
@@ -70,11 +71,6 @@ const AssumptionsForm = () => {
   } = useForm<IAssumptions>();
   const dispatch = useDispatch();
   const initialValues = useSelector((state: any) => state.assumptions);
-  // const balances = useSelector((state: any) => state.balances);
-  // const fetchErrors = useSelector((state: any) => state.errors);
-  // console.log(initialValues);
-  // console.log(balances);
-  // console.log(fetchErrors);
 
   const onSubmit = (data: Record<string, string>) => {
     // Strip out commas and convert to numbers.
@@ -82,6 +78,7 @@ const AssumptionsForm = () => {
     Object.entries(data).forEach(
       ([key, value]) => (result[key] = Number(value.replace(/,/g, "")))
     );
+    result.finalAge = 99;
     result.withdrawalRate /= 100;
     result.expectedRealReturn /= 100;
     result.expectedInflationRate /= 100;
@@ -119,6 +116,20 @@ const AssumptionsForm = () => {
       />
       <p>{errors.startBalance && "Positive balance"}</p>
 
+      <label htmlFor="withdrawalRate">Withdrawal rate (%)</label>
+      <input
+        name="withdrawalRate"
+        ref={register({
+          required: true,
+          min: 0,
+          max: 100,
+          pattern: /^[0-9/.]*$/,
+        })}
+        defaultValue={initialValues.withdrawalRate}
+        type="text"
+      />
+      <p>{errors.withdrawalRate && "Between 0 and 100"}</p>
+
       <label htmlFor="currentAge">Current age (years)</label>
       <input
         name="currentAge"
@@ -147,7 +158,7 @@ const AssumptionsForm = () => {
       />
       <p>{errors.startAge && "Between 60 and 70"}</p>
 
-      <label htmlFor="finalAge">Final age (years)</label>
+      {/* <label htmlFor="finalAge">Final age (years)</label>
       <input
         name="finalAge"
         ref={register({
@@ -159,21 +170,7 @@ const AssumptionsForm = () => {
         defaultValue={initialValues.finalAge}
         type="text"
       />
-      <p>{errors.finalAge && "Between 25 and 120"}</p>
-
-      <label htmlFor="withdrawalRate">Withdrawal rate (%)</label>
-      <input
-        name="withdrawalRate"
-        ref={register({
-          required: true,
-          min: 0,
-          max: 100,
-          pattern: /^[0-9/.]*$/,
-        })}
-        defaultValue={initialValues.withdrawalRate}
-        type="text"
-      />
-      <p>{errors.withdrawalRate && "Between 0 and 100"}</p>
+      <p>{errors.finalAge && "Between 25 and 120"}</p> */}
 
       <label htmlFor="expectedRealReturn">Real return (%)</label>
       <input

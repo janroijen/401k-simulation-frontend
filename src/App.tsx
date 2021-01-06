@@ -1,9 +1,10 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
-import Basic from "./components/assumptions-form";
-import Table from "./components/balances-table";
-import Test from "./components/react-vis-test";
+import InputPanel from "./components/assumptions-form";
+import ReportSelection from "./components/report-401k";
+// import Table from "./components/balances-table";
+// import Test from "./components/line-graph";
 
 import styled from "styled-components";
 
@@ -17,9 +18,8 @@ function App() {
   return (
     <Container className="App">
       <Provider store={store}>
-        <Basic />
-        <Test />
-        <Table />
+        <InputPanel />
+        <ReportSelection />
       </Provider>
     </Container>
   );

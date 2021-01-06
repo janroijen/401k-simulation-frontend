@@ -1,6 +1,6 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import styled from "styled-components";
+import colors from "../styles/colors";
 
 const StyledTable = styled.table`
   border-sizing: border-box;
@@ -9,12 +9,14 @@ const StyledTable = styled.table`
   text-align: right;
   padding: 0px 10px;
   margin: 10px;
+  margin-top: 0px;
+  margin-left: 0px;
   max-width: 1500px;
   border-collapse: collapse;
-  border: thin solid #ccc;
+  border: thin solid ${colors.tints[11]};
 
   thead {
-    background-color: #eee;
+    background-color: ${colors.tints[12]};
     vertical-align: text-top;
   }
   th {
@@ -26,28 +28,28 @@ const StyledTable = styled.table`
     padding: 3px 10px;
   }
   tbody tr:nth-child(5n) {
-    border-bottom: thin solid #eee;
+    border-bottom: thin solid ${colors.tints[13]};
   }
   tbody tr:last-child {
-    border-bottom: thin solid #ccc;
+    border-bottom: thin solid ${colors.tints[11]};
   }
 
   td:nth-child(2),
   td:nth-child(6),
   td:nth-child(10) {
-    border-right: thin solid #eee;
+    border-right: thin solid ${colors.tints[13]};
   }
 
   td:nth-child(3),
   td:nth-child(10) {
-    color: #00a;
+    color: ${colors.tints[1]};
   }
 
   tbody tr:hover {
-    background-color: #ddd;
+    background-color: ${colors.tints[13]};
   }
   tbody tr td:hover {
-    background-color: #bbb;
+    background-color: ${colors.tints[12]};
   }
 
   .tooltip {
@@ -120,13 +122,8 @@ const DataRows = ({ data }: { data: TabularData }) => {
 
 const numberFormat = (x: number[]) => x.map((y) => y.toLocaleString());
 
-const Table = () => {
-  const loadingStatus = useSelector((state: any) => state.loading);
-  const data = useSelector((state: any) => state.balances);
-
-  if (loadingStatus === "pending" || !data) {
-    return <div>Loading</div>;
-  }
+const Table = ({ data }: { data: any }) => {
+  if (!data) return <div>Loading</div>;
 
   const tableData = {
     Age: { data: data.age },
