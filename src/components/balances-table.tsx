@@ -13,10 +13,10 @@ const StyledTable = styled.table`
   margin-left: 0px;
   max-width: 1500px;
   border-collapse: collapse;
-  border: thin solid ${colors.tints[11]};
+  border: thin solid ${colors.tints[10]};
 
   thead {
-    background-color: ${colors.tints[12]};
+    background-color: ${colors.tints[11]};
     vertical-align: text-top;
   }
   th {
@@ -129,11 +129,11 @@ const Table = ({ data }: { data: any }) => {
     Age: { data: data.age },
     Year: { data: data.year },
 
-    "Actual withdrawal": {
+    "Actual income": {
       data: numberFormat(data.withdrawal.actual),
       tooltip: `The higher of the target distribution and the minimum required distribution.`,
     },
-    "Target withdrawal": {
+    "Target income": {
       data: numberFormat(data.withdrawal.target),
       tooltip: `The intended amount to be taken out of the account. This is defined as a percentage
          of the balance at the first year of distributions and inflation adjusted in later year.`,
@@ -144,7 +144,7 @@ const Table = ({ data }: { data: any }) => {
          The amount is a percentage of the account's balance. This percentage reflects
          expected remaining lifetime and increases with age.`,
     },
-    "Excess withdrawal": {
+    "Above target income": {
       data: numberFormat(data.withdrawal.excess),
       tooltip: `The positive difference between the target withdrawal and the minimum
          required distribution. The assumption is that this amount is being save in a

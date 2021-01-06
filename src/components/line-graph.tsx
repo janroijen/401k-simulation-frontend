@@ -116,7 +116,7 @@ const drawGraph = (
     .append("text")
     .attr("font-size", 10)
     .attr("x", -8)
-    .attr("y", -4)
+    .attr("y", -8)
     .attr("text-anchor", "end")
     .text(unit);
 };

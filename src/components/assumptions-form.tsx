@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -10,7 +10,7 @@ const Form = styled.form`
   box-sizing: border-box;
   font-size: 12px;
   width: 180px;
-  background-color: ${colors.tints[13]};
+  background-color: ${colors.tints[11]};
   border-radius: 3px;
   margin: 10px;
   display: flex;
@@ -21,29 +21,52 @@ const Form = styled.form`
   label {
     color: ${colors.tints[0]};
     text-align: left;
+    margin-top: 10px;
     margin-bottom: 3px;
-    margin-left: 3px;
   }
   p {
-    color: red;
+    color: #880000;
     text-align: left;
     font-size: 10px;
     margin-top: 2px;
     margin-bottom: 5px;
     height: 10px;
   }
+  p::before {
+    display: inline;
+    content: "⚠ ";
+  }
+
   div.radio {
     display: flex;
+    margin-top: 20px;
   }
   div label {
     margin-top: 2px;
   }
+
   input[type="text"] {
-    padding: 6px 10px;
-    border-radius: 3px;
-    border-color: gray;
+    outline: none;
+    border-radius: 2px 2px 0px 0px;
     border-width: 1px;
+    border-style: hidden;
+    border-bottom-style: solid;
+    border-color: ${colors.tints[6]};
+    padding: 6px 10px;
   }
+  input[type="text"]:focus {
+    background-color: ${colors.tints[13]};
+  }
+
+  input[type="radio"] {
+    border-color: ${colors.tints[3]};
+    outline-color: ${colors.tints[3]};
+  }
+  input[type="radio"]:focus {
+    border-color: ${colors.tints[3]};
+    border-width: 6px;
+  }
+
   input[type="submit"] {
     outline: none;
     background-color: ${colors.tints[3]};
@@ -56,7 +79,8 @@ const Form = styled.form`
     font-weight: bold;
     margin-top: 20px;
   }
-  input[type="submit"]:hover {
+  input[type="submit"]:hover,
+  input[type="submit"]:disabled {
     background-color: ${colors.tints[6]};
   }
 `;
@@ -68,9 +92,18 @@ const AssumptionsForm = () => {
     errors,
     getValues,
     setValue,
-  } = useForm<IAssumptions>();
+    reset,
+    formState: { isSubmitSuccessful, isDirty, isValid },
+  } = useForm<IAssumptions>({ mode: "onBlur" });
   const dispatch = useDispatch();
   const initialValues = useSelector((state: any) => state.assumptions);
+  const [submittedValues, setSubmittedValue] = useState(initialValues);
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset({ ...submittedValues });
+    }
+  }, [isSubmitSuccessful, submittedValues, reset]);
 
   const onSubmit = (data: Record<string, string>) => {
     // Strip out commas and convert to numbers.
@@ -85,6 +118,8 @@ const AssumptionsForm = () => {
     result.output = data.output;
 
     dispatch(fetchProjectedBalances(result));
+
+    setSubmittedValue(data);
   };
 
   const localizeNumber = (value: string): string => {
@@ -96,7 +131,10 @@ const AssumptionsForm = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+    <Form
+      onSubmit={handleSubmit(onSubmit, () => console.log("error"))}
+      autoComplete="off"
+    >
       <label htmlFor="startBalance">Current balance ($)</label>
       <input
         name="startBalance"
@@ -114,7 +152,7 @@ const AssumptionsForm = () => {
           )
         }
       />
-      <p>{errors.startBalance && "Positive balance"}</p>
+      {errors.startBalance && <p>Positive balance</p>}
 
       <label htmlFor="withdrawalRate">Withdrawal rate (%)</label>
       <input
@@ -128,7 +166,7 @@ const AssumptionsForm = () => {
         defaultValue={initialValues.withdrawalRate}
         type="text"
       />
-      <p>{errors.withdrawalRate && "Between 0 and 100"}</p>
+      {errors.withdrawalRate && <p>Between 0 and 100</p>}
 
       <label htmlFor="currentAge">Current age (years)</label>
       <input
@@ -142,7 +180,7 @@ const AssumptionsForm = () => {
         defaultValue={initialValues.currentAge}
         type="text"
       />
-      <p>{errors.currentAge && "Between 25 and 120"}</p>
+      {errors.currentAge && <p>Between 25 and 120</p>}
 
       <label htmlFor="startAge">Start age (years)</label>
       <input
@@ -156,21 +194,7 @@ const AssumptionsForm = () => {
         defaultValue={initialValues.startAge}
         type="text"
       />
-      <p>{errors.startAge && "Between 60 and 70"}</p>
-
-      {/* <label htmlFor="finalAge">Final age (years)</label>
-      <input
-        name="finalAge"
-        ref={register({
-          required: true,
-          min: 25,
-          max: 120,
-          pattern: /^[0-9/.]*$/,
-        })}
-        defaultValue={initialValues.finalAge}
-        type="text"
-      />
-      <p>{errors.finalAge && "Between 25 and 120"}</p> */}
+      {errors.startAge && <p>Between 60 and 70</p>}
 
       <label htmlFor="expectedRealReturn">Real return (%)</label>
       <input
@@ -182,7 +206,7 @@ const AssumptionsForm = () => {
         defaultValue={initialValues.expectedRealReturn}
         type="text"
       />
-      <p>{errors.expectedRealReturn && "Between 0 and 100"}</p>
+      {errors.expectedRealReturn && <p>Between 0 and 100</p>}
 
       <label htmlFor="expectedInflationRate">Inflation (%)</label>
       <input
@@ -194,7 +218,7 @@ const AssumptionsForm = () => {
         defaultValue={initialValues.expectedInflationRate}
         type="text"
       />
-      <p>{errors.expectedInflationRate && "Between 0 and 100"}</p>
+      {errors.expectedInflationRate && <p>Between 0 and 100</p>}
 
       <div className="radio">
         <input
@@ -214,7 +238,7 @@ const AssumptionsForm = () => {
         />
         <label htmlFor="output">Nominal</label>
       </div>
-      <input type="submit" value="Calculate" />
+      <input type="submit" value="Calculate" disabled={!isDirty || !isValid} />
     </Form>
   );
 };

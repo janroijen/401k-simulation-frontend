@@ -10,6 +10,7 @@ type ReportChoices = "table" | "balance-graph" | "income-graph";
 const StyledReport401k = styled.div`
   display: flex;
   flex-direction: column;
+  // width: calc(100vw-210px);
 `;
 
 const Report401k = () => {
@@ -17,16 +18,14 @@ const Report401k = () => {
   const data = useSelector((state: any) => state.balances);
   const [selection, setSelection] = useState<ReportChoices>("income-graph");
 
-  if (loadingStatus === "pending" || !data) {
-    return <div>Loading</div>;
-  }
-
   const handleSelection = (selection: ReportChoices) => setSelection(selection);
 
   return (
     <StyledReport401k>
       <SelectionButtons selection={selection} onSelection={handleSelection} />
-      <Switch data={data} choice={selection} />
+      {loadingStatus !== "pending" && data && (
+        <Switch data={data} choice={selection} />
+      )}
     </StyledReport401k>
   );
 };
@@ -36,17 +35,27 @@ export default Report401k;
 const StyledSelection = styled.div`
   box-sizing: border-box;
   font-size: 12px;
-  background-color: ${colors.tints[13]};
+  background-color: ${colors.tints[11]};
   border-radius: 3px;
   margin: 10px;
   margin-left: 0;
   padding: 15px;
+  padding-top: 12px;
   display: flex;
   height: 42px;
   color: ${colors.tints[0]};
 
   label {
     margin-top: 1px;
+  }
+
+  input[type="radio"] {
+    border-color: ${colors.tints[3]};
+    outline-color: ${colors.tints[3]};
+  }
+  input[type="radio"]:focus {
+    border-color: ${colors.tints[3]};
+    border-width: 6px;
   }
 `;
 
@@ -136,11 +145,6 @@ const Switch = ({ data, choice }: { data: any; choice: ReportChoices }) => {
             label: "Target income",
             data: data.withdrawal.target,
             color: colors.triadic[1],
-          },
-          {
-            label: "Required distribution",
-            data: data.withdrawal.mrd,
-            color: colors.triadic[2],
           },
           {
             label: "Actual income",
