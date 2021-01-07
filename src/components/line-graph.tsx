@@ -13,8 +13,9 @@ interface LineGraphDefinition {
 
 const StyledDiv = styled.div`
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+  display: block;
+  width: 100%;
+  height: 100%;
 
   h1 {
     font-size: 24px;
@@ -26,9 +27,24 @@ const LineGraph = ({ graphDef }: { graphDef: LineGraphDefinition }) => {
   const graphRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!graphDef) return;
+    if (!graphDef || !graphRef.current || !graphRef.current.parentElement) {
+      return;
+    }
 
-    drawGraph(graphRef, graphDef);
+    console.log(graphRef.current.parentElement.offsetWidth);
+    console.log(graphRef.current.parentElement.offsetHeight);
+
+    const gDef = { ...graphDef };
+    gDef.dimensions = {
+      width: Math.max(graphDef.dimensions.width, graphRef.current.offsetWidth),
+      height: Math.max(
+        graphDef.dimensions.height,
+        graphRef.current.parentElement.offsetHeight
+      ),
+    };
+
+    console.log(gDef.dimensions);
+    drawGraph(graphRef, gDef);
   }, [graphDef]);
 
   if (!graphDef) {
@@ -99,7 +115,7 @@ const drawGraph = (
   svg
     .append("g")
     .attr("font-size", 12)
-    .attr("transform", `translate(${150}, ${-0.5 * margin.top})`)
+    .attr("transform", `translate(${0}, ${-0.5 * margin.top})`)
     .call(createLegend, yaxes);
 
   svg

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import colors from "../styles/colors";
@@ -8,24 +8,44 @@ import LineGraph from "./line-graph";
 type ReportChoices = "table" | "balance-graph" | "income-graph";
 
 const StyledReport401k = styled.div`
-  display: flex;
-  flex-direction: column;
-  // width: calc(100vw-210px);
+  width: calc(100vw - 230px);
+  max-width: 1500px;
+
+  .selected-report {
+    width: calc(100vw - 230px);
+    max-width: 1500px;
+    height: calc(100vh - 150px);
+    max-height: 800px;
+  }
 `;
 
 const Report401k = () => {
   const loadingStatus = useSelector((state: any) => state.loading);
   const data = useSelector((state: any) => state.balances);
+  const [dataInternal, setDataInternal] = useState(data);
   const [selection, setSelection] = useState<ReportChoices>("income-graph");
 
+  // Only update the depicted data when it is available to avoid flickering the
+  // screen during the reload.
+
+  useEffect(() => {
+    if (loadingStatus !== "pending") {
+      setDataInternal(data);
+    }
+  }, [data, loadingStatus]);
+
   const handleSelection = (selection: ReportChoices) => setSelection(selection);
+
+  if (!dataInternal) {
+    return <div>Loading</div>;
+  }
 
   return (
     <StyledReport401k>
       <SelectionButtons selection={selection} onSelection={handleSelection} />
-      {loadingStatus !== "pending" && data && (
-        <Switch data={data} choice={selection} />
-      )}
+      {/* {loadingStatus !== "pending" && data && ( */}
+      <Switch data={dataInternal} choice={selection} />
+      {/* )} */}
     </StyledReport401k>
   );
 };
@@ -41,13 +61,13 @@ const StyledSelection = styled.div`
   margin-left: 0;
   padding: 15px;
   padding-top: 12px;
-  display: flex;
+  display: block;
   height: 42px;
   color: ${colors.tints[0]};
 
-  label {
-    margin-top: 1px;
-  }
+  // label {
+  //   margin-top: 2px;
+  // }
 
   input[type="radio"] {
     border-color: ${colors.tints[3]};
@@ -99,9 +119,11 @@ const SelectionButtons = ({
 };
 
 const Switch = ({ data, choice }: { data: any; choice: ReportChoices }) => {
+  let elem: JSX.Element;
   switch (choice) {
     case "table":
-      return <Table data={data} />;
+      elem = <Table data={data} />;
+      break;
     case "balance-graph":
       const balanceGraphDef = {
         title: "Account balances ($)",
@@ -127,7 +149,7 @@ const Switch = ({ data, choice }: { data: any; choice: ReportChoices }) => {
           },
         ],
         unit: "$",
-        dimensions: { width: 800, height: 450 },
+        dimensions: { width: 520, height: 450 },
         margin: {
           top: 48,
           right: 32,
@@ -135,7 +157,8 @@ const Switch = ({ data, choice }: { data: any; choice: ReportChoices }) => {
           left: 64,
         },
       };
-      return <LineGraph graphDef={balanceGraphDef} />;
+      elem = <LineGraph graphDef={balanceGraphDef} />;
+      break;
     case "income-graph":
       const incomeGraphDef = {
         title: "Income ($)",
@@ -153,7 +176,7 @@ const Switch = ({ data, choice }: { data: any; choice: ReportChoices }) => {
           },
         ],
         unit: "$",
-        dimensions: { width: 800, height: 450 },
+        dimensions: { width: 520, height: 450 },
         margin: {
           top: 48,
           right: 32,
@@ -161,8 +184,11 @@ const Switch = ({ data, choice }: { data: any; choice: ReportChoices }) => {
           left: 64,
         },
       };
-      return <LineGraph graphDef={incomeGraphDef} />;
+      elem = <LineGraph graphDef={incomeGraphDef} />;
+      break;
   }
+
+  return <div className="selected-report">{elem}</div>;
 };
 
 const add = (x: number[], y: number[]): number[] => {

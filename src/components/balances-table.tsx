@@ -4,8 +4,8 @@ import colors from "../styles/colors";
 
 const StyledTable = styled.table`
   border-sizing: border-box;
-  font-size: 16px;
-  font-family: "Roboto";
+  font-size: 12px;
+  // font-family: "Roboto";
   text-align: right;
   padding: 0px 10px;
   margin: 10px;
@@ -13,16 +13,23 @@ const StyledTable = styled.table`
   margin-left: 0px;
   max-width: 1500px;
   border-collapse: collapse;
-  border: thin solid ${colors.tints[10]};
 
   thead {
     background-color: ${colors.tints[11]};
+    color: ${colors.tints[0]};
     vertical-align: text-top;
+    border: thin solid ${colors.tints[10]};
+  }
+  tbody {
+    border: thin solid ${colors.tints[10]};
+    font-family: "Roboto";
+    font-size: 14px;
   }
   th {
     font-weight: normal;
     padding: 5px 10px;
     min-width: 55px;
+    position: sticky;
   }
   td {
     padding: 3px 10px;
@@ -120,11 +127,11 @@ const DataRows = ({ data }: { data: TabularData }) => {
   );
 };
 
-const numberFormat = (x: number[]) => x.map((y) => y.toLocaleString());
+const numberFormat = (x: number[]) =>
+  x.map((y) => (typeof y === "number" ? y.toLocaleString() : ""));
 
 const Table = ({ data }: { data: any }) => {
   if (!data) return <div>Loading</div>;
-
   const tableData = {
     Age: { data: data.age },
     Year: { data: data.year },

@@ -99,6 +99,11 @@ const AssumptionsForm = () => {
   const initialValues = useSelector((state: any) => state.assumptions);
   const [submittedValues, setSubmittedValue] = useState(initialValues);
 
+  // Initial data load
+  useEffect(() => {
+    dispatch(fetchProjectedBalances(initialValues));
+  }, [dispatch, initialValues]);
+
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset({ ...submittedValues });
@@ -117,7 +122,7 @@ const AssumptionsForm = () => {
     result.expectedInflationRate /= 100;
     result.output = data.output;
 
-    dispatch(fetchProjectedBalances(result));
+    dispatch(fetchProjectedBalances(data));
 
     setSubmittedValue(data);
   };

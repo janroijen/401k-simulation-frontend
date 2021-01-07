@@ -22,16 +22,31 @@ const initialValues: IAssumptions = {
   output: "real",
 };
 
+const cleanRequest = (data: any): IAssumptions => {
+  const result: any = {};
+  Object.entries(data).forEach(
+    ([key, value]) =>
+      (result[key] =
+        typeof value === "string" ? Number(value.replace(/,/g, "")) : value)
+  );
+  result.finalAge = 99;
+  result.withdrawalRate /= 100;
+  result.expectedRealReturn /= 100;
+  result.expectedInflationRate /= 100;
+  result.output = data.output;
+
+  return result;
+};
+
 export const fetchProjectedBalances = createAsyncThunk(
   "401k-balances/fetchProjectedBalance",
-  async (assumptions: IAssumptions) => {
+  async (assumptions: any | undefined) => {
     const response = await fetch("http://localhost:4000/balances", {
       method: "POST",
       mode: "cors",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(assumptions),
+      body: JSON.stringify(cleanRequest(assumptions ?? initialValues)),
     });
-
     return response.json();
   }
 );
