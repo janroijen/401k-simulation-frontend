@@ -77,11 +77,12 @@ const drawGraph = (
   const x = d3
     .scaleLinear()
     .domain([min(xaxis.data), max(xaxis.data)])
-    .range([0, width]);
+    .range([0, width])
+    .nice();
 
   const maxY = max(yaxes.flatMap((yaxis) => yaxis.data));
 
-  const y = d3.scaleLinear().domain([maxY, 0]).range([0, height]);
+  const y = d3.scaleLinear().domain([maxY, 0]).range([0, height]).nice();
 
   const xAxis = d3.axisBottom(x);
   svg

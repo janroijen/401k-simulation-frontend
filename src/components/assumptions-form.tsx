@@ -137,10 +137,7 @@ const AssumptionsForm = () => {
   };
 
   return (
-    <Form
-      onSubmit={handleSubmit(onSubmit, () => console.log("error"))}
-      autoComplete="off"
-    >
+    <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
       <label htmlFor="startBalance">Current balance ($)</label>
       <input
         name="startBalance"
