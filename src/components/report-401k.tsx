@@ -160,18 +160,28 @@ const Switch = ({ data, choice }: { data: any; choice: ReportChoices }) => {
       elem = <LineGraph graphDef={balanceGraphDef} />;
       break;
     case "income-graph":
+      const age = data.age as number[];
+      const targetIncome = data.withdrawal.target as number[];
+      const actualIncome = data.withdrawal.actual as number[];
       const incomeGraphDef = {
         title: "Income ($)",
-        xaxis: { label: "Age", data: data.age },
+        xaxis: {
+          label: "Age",
+          data: age,
+        },
         yaxes: [
           {
             label: "Target income",
-            data: data.withdrawal.target,
+            data: targetIncome.map((income, idx) =>
+              age[idx] < data.assumptions.startAge ? NaN : income
+            ),
             color: colors.triadic[1],
           },
           {
             label: "Actual income",
-            data: data.withdrawal.actual,
+            data: actualIncome.map((income, idx) =>
+              age[idx] < data.assumptions.startAge ? NaN : income
+            ),
             color: colors.triadic[0],
           },
         ],

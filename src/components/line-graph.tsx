@@ -31,9 +31,6 @@ const LineGraph = ({ graphDef }: { graphDef: LineGraphDefinition }) => {
       return;
     }
 
-    console.log(graphRef.current.parentElement.offsetWidth);
-    console.log(graphRef.current.parentElement.offsetHeight);
-
     const gDef = { ...graphDef };
     gDef.dimensions = {
       width: Math.max(graphDef.dimensions.width, graphRef.current.offsetWidth),
@@ -43,7 +40,6 @@ const LineGraph = ({ graphDef }: { graphDef: LineGraphDefinition }) => {
       ),
     };
 
-    console.log(gDef.dimensions);
     drawGraph(graphRef, gDef);
   }, [graphDef]);
 
@@ -80,12 +76,21 @@ const drawGraph = (
 
   const x = d3
     .scaleLinear()
-    .domain([Math.min(...xaxis.data), Math.max(...xaxis.data)])
+    .domain([min(xaxis.data), max(xaxis.data)])
     .range([0, width]);
 
-  const maxY = Math.max(...yaxes.flatMap((yaxis) => yaxis.data));
+  const maxY = max(yaxes.flatMap((yaxis) => yaxis.data));
 
   const y = d3.scaleLinear().domain([maxY, 0]).range([0, height]);
+
+  const xAxis = d3.axisBottom(x);
+  svg
+    .append("g")
+    .attr("transform", `translate(0, ${y(0)})`)
+    .call(xAxis);
+
+  const yAxis = d3.axisLeft(y);
+  svg.append("g").call(yAxis);
 
   const lineBuilder: any = d3
     .line()
@@ -102,15 +107,6 @@ const drawGraph = (
       .attr("stroke", yseries.color)
       .attr("d", lineBuilder);
   });
-
-  const xAxis = d3.axisBottom(x);
-  svg
-    .append("g")
-    .attr("transform", `translate(0, ${y(0)})`)
-    .call(xAxis);
-
-  const yAxis = d3.axisLeft(y);
-  svg.append("g").call(yAxis);
 
   svg
     .append("g")
@@ -141,11 +137,20 @@ const zipSeries = (x: number[], y: number[]): { x: number; y: number }[] => {
   const result = [];
 
   for (let i = 0; i < x.length; i++) {
-    result.push({ x: x[i], y: y[i] });
+    // ignore NaNs and infinity
+    if (!Number.isNaN(y[i]) && Number.isFinite(y[i])) {
+      result.push({ x: x[i], y: y[i] });
+    }
   }
 
   return result;
 };
+
+const max = (x: number[]) =>
+  Math.max(...x.filter((x) => !Number.isNaN(x) && Number.isFinite(x)));
+
+const min = (x: number[]) =>
+  Math.min(...x.filter((x) => !Number.isNaN(x) && Number.isFinite(x)));
 
 const createLegend = (
   selection: d3.Selection<SVGGElement, unknown, null, undefined>,
