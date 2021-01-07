@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface IAssumptions {
   startBalance: string;
+  annualContribution: string;
   currentAge: number;
   startAge: number;
   finalAge: number;
@@ -13,6 +14,7 @@ export interface IAssumptions {
 
 const initialValues: IAssumptions = {
   startBalance: "500,000",
+  annualContribution: "10,000",
   currentAge: 50,
   startAge: 60,
   finalAge: 99,

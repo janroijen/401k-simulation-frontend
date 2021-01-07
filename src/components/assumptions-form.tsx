@@ -127,12 +127,13 @@ const AssumptionsForm = () => {
     setSubmittedValue(data);
   };
 
-  const localizeNumber = (value: string): string => {
-    const number = Number(
-      getValues("startBalance").toString().replace(/,/g, "")
-    );
+  const insertThousandSeparator = (
+    fieldName: "startBalance" | "annualContribution"
+  ): void => {
+    const origValue = getValues(fieldName);
+    const number = Number(origValue.toString().replace(/,/g, ""));
 
-    return isNaN(number) ? value : number.toLocaleString();
+    setValue(fieldName, isNaN(number) ? origValue : number.toLocaleString());
   };
 
   return (
@@ -150,14 +151,23 @@ const AssumptionsForm = () => {
         })}
         defaultValue={initialValues.startBalance}
         type="text"
-        onBlur={() =>
-          setValue(
-            "startBalance",
-            localizeNumber(getValues("startBalance").toString())
-          )
-        }
+        onBlur={() => insertThousandSeparator("startBalance")}
       />
       {errors.startBalance && <p>Positive balance</p>}
+
+      <label htmlFor="annualContribution">Annual contribution ($)</label>
+      <input
+        name="annualContribution"
+        ref={register({
+          required: true,
+          min: 0,
+          pattern: /^[0-9,/.]*$/,
+        })}
+        defaultValue={initialValues.annualContribution}
+        type="text"
+        onBlur={() => insertThousandSeparator("annualContribution")}
+      />
+      {errors.annualContribution && <p>Positive balance</p>}
 
       <label htmlFor="withdrawalRate">Withdrawal rate (%)</label>
       <input
