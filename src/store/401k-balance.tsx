@@ -19,8 +19,8 @@ const initialValues: IAssumptions = {
   startAge: 65,
   finalAge: 99,
   withdrawalRate: 3,
-  expectedRealReturn: 2,
-  expectedInflationRate: 2,
+  expectedRealReturn: 3,
+  expectedInflationRate: 3,
   output: "real",
 };
 

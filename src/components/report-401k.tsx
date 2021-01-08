@@ -10,18 +10,6 @@ interface ReportChoices {
   format: "table" | "line-graph";
 }
 
-const StyledReport401k = styled.div`
-  width: calc(100vw - 230px);
-  max-width: 1500px;
-
-  .selected-report {
-    width: calc(100vw - 230px);
-    max-width: 1500px;
-    height: calc(100vh - 150px);
-    max-height: 800px;
-  }
-`;
-
 const Report401k = () => {
   const loadingStatus = useSelector((state: any) => state.loading);
   const data = useSelector((state: any) => state.balances);
@@ -47,13 +35,13 @@ const Report401k = () => {
   }
 
   return (
-    <StyledReport401k>
+    <div>
       <SelectionButtons
         initialSelection={selection}
         onSelection={handleSelection}
       />
       <Switch data={dataInternal} choice={selection} />
-    </StyledReport401k>
+    </div>
   );
 };
 
@@ -159,11 +147,12 @@ const Switch = ({ data, choice }: { data: any; choice: ReportChoices }) => {
     case "income-table":
       const incomeTable = {
         Age: { data: data.age },
-        Year: { data: data.year },
+        Year: { data: data.year, rightBorder: true },
 
         "Actual income": {
           data: numberFormat(data.withdrawal.actual),
           tooltip: `The higher of the target distribution and the minimum required distribution.`,
+          highlight: true,
         },
         "Target income": {
           data: numberFormat(data.withdrawal.target),
@@ -188,7 +177,7 @@ const Switch = ({ data, choice }: { data: any; choice: ReportChoices }) => {
     case "wealth-table":
       const wealthTable = {
         Age: { data: data.age },
-        Year: { data: data.year },
+        Year: { data: data.year, rightBorder: true },
 
         "Deferred opening Balance": {
           data: numberFormat(data.taxDeferredAccount.openingBalance),
@@ -208,6 +197,8 @@ const Switch = ({ data, choice }: { data: any; choice: ReportChoices }) => {
                will equal the opening balance for the
                following year for nominal returns. For real return the opening balance will be
                lower due to another year of inflation adjustment.`,
+          rightBorder: true,
+          highlight: true,
         },
 
         "Taxable opening Balance": {
@@ -228,6 +219,7 @@ const Switch = ({ data, choice }: { data: any; choice: ReportChoices }) => {
                will equal the opening balance for the
                following year for nominal returns. For real return the opening balance will be
                lower due to another year of inflation adjustment.`,
+          highlight: true,
         },
       };
       elem = <Table data={wealthTable} />;

@@ -227,7 +227,7 @@ const AssumptionsForm = () => {
           defaultValue={initialValues.currentAge}
           type="range"
           min="25"
-          max="100"
+          max="75"
         />
         <output htmlFor="currentAge">
           {watch("currentAge", initialValues.currentAge)}
@@ -263,7 +263,7 @@ const AssumptionsForm = () => {
           defaultValue={initialValues.withdrawalRate}
           type="range"
           min="0"
-          max="8"
+          max="6"
           step="0.25"
         />
         <output htmlFor="withdrawalRate">
@@ -284,7 +284,7 @@ const AssumptionsForm = () => {
           defaultValue={initialValues.expectedRealReturn}
           type="range"
           min="0"
-          max="8"
+          max="6"
           step="0.25"
         />
         <output htmlFor="expectedRealReturn">
@@ -305,7 +305,7 @@ const AssumptionsForm = () => {
           defaultValue={initialValues.expectedInflationRate}
           type="range"
           min="0"
-          max="8"
+          max="6"
           step="0.25"
         />
         <output htmlFor="expectedInflationRate">

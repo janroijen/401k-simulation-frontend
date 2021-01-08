@@ -14,8 +14,10 @@ interface LineGraphDefinition {
 const StyledDiv = styled.div`
   box-sizing: border-box;
   display: block;
-  width: 100%;
-  height: 100%;
+  width: calc(100vw - 230px);
+  max-width: 1500px;
+  height: calc(100vh - 150px);
+  max-height: 800px;
 
   h1 {
     font-size: 24px;
