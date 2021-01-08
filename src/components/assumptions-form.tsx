@@ -24,6 +24,9 @@ const Form = styled.form`
     margin-top: 10px;
     margin-bottom: 3px;
   }
+  label.newsection {
+    margin-top: 25px;
+  }
   p {
     color: #880000;
     text-align: left;
@@ -39,7 +42,7 @@ const Form = styled.form`
 
   div.radio {
     display: flex;
-    margin-top: 20px;
+    margin-top: 25px;
   }
   div label {
     margin-top: 2px;
@@ -83,6 +86,51 @@ const Form = styled.form`
   input[type="submit"]:disabled {
     background-color: ${colors.tints[6]};
   }
+
+  div.slider {
+    display: flex;
+    justify-contents: space-between;
+    align-items: center;
+  }
+  input[type="range"] {
+    display: inline;
+    width: 75%;
+    margin-left: 0;
+    margin-right: 10px;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background: ${colors.tints[8]};
+    height: 4px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    cursor: pointer;
+    animate: 0.2s;
+    background: ${colors.tints[8]};
+    border-radius: 2px;
+    border: 0px;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    height: 12px;
+    width: 12px;
+    border-radius: 12px;
+    background: ${colors.tints[4]};
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -4px;
+  }
+  input[type="range"]:focus::-webkit-slider-runnable-track {
+    background: ${colors.tints[7]};
+  }
+  output {
+    color: ${colors.tints[0]};
+    display: inline;
+    width: 25%;
+    text-align: right;
+  }
 `;
 
 const AssumptionsForm = () => {
@@ -92,6 +140,7 @@ const AssumptionsForm = () => {
     errors,
     getValues,
     setValue,
+    watch,
     reset,
     formState: { isSubmitSuccessful, isDirty, isValid },
   } = useForm<IAssumptions>({ mode: "onBlur" });
@@ -166,71 +215,106 @@ const AssumptionsForm = () => {
       />
       {errors.annualContribution && <p>Positive balance</p>}
 
-      <label htmlFor="withdrawalRate">Withdrawal rate (%)</label>
-      <input
-        name="withdrawalRate"
-        ref={register({
-          required: true,
-          min: 0,
-          max: 100,
-          pattern: /^[0-9/.]*$/,
-        })}
-        defaultValue={initialValues.withdrawalRate}
-        type="text"
-      />
-      {errors.withdrawalRate && <p>Between 0 and 100</p>}
+      <label className="newsection" htmlFor="currentAge">
+        Current age (years)
+      </label>
+      <div className="slider">
+        <input
+          name="currentAge"
+          ref={register({
+            required: true,
+          })}
+          defaultValue={initialValues.currentAge}
+          type="range"
+          min="25"
+          max="100"
+        />
+        <output htmlFor="currentAge">
+          {watch("currentAge", initialValues.currentAge)}
+        </output>
+      </div>
 
-      <label htmlFor="currentAge">Current age (years)</label>
-      <input
-        name="currentAge"
-        ref={register({
-          required: true,
-          min: 25,
-          max: 120,
-          pattern: /^[0-9/.]*$/,
-        })}
-        defaultValue={initialValues.currentAge}
-        type="text"
-      />
-      {errors.currentAge && <p>Between 25 and 120</p>}
+      <label htmlFor="startAge">Retirement age (years)</label>
+      <div className="slider">
+        <input
+          name="startAge"
+          ref={register({
+            required: true,
+          })}
+          defaultValue={initialValues.startAge}
+          type="range"
+          min="60"
+          max="70"
+        />
+        <output htmlFor="startAge">
+          {watch("startAge", initialValues.startAge)}
+        </output>
+      </div>
 
-      <label htmlFor="startAge">Start age (years)</label>
-      <input
-        name="startAge"
-        ref={register({
-          required: true,
-          min: 60,
-          max: 70,
-          pattern: /^[0-9/.]*$/,
-        })}
-        defaultValue={initialValues.startAge}
-        type="text"
-      />
-      {errors.startAge && <p>Between 60 and 70</p>}
+      <label className="newsection" htmlFor="withdrawalRate">
+        Withdrawal rate (%)
+      </label>
+      <div className="slider">
+        <input
+          name="withdrawalRate"
+          ref={register({
+            required: true,
+          })}
+          defaultValue={initialValues.withdrawalRate}
+          type="range"
+          min="0"
+          max="8"
+          step="0.25"
+        />
+        <output htmlFor="withdrawalRate">
+          {Number(
+            watch("withdrawalRate", initialValues.withdrawalRate)
+          ).toFixed(2)}
+          %
+        </output>
+      </div>
 
       <label htmlFor="expectedRealReturn">Real return (%)</label>
-      <input
-        name="expectedRealReturn"
-        ref={register({
-          required: true,
-          pattern: /^[0-9/.]*$/,
-        })}
-        defaultValue={initialValues.expectedRealReturn}
-        type="text"
-      />
-      {errors.expectedRealReturn && <p>Between 0 and 100</p>}
+      <div className="slider">
+        <input
+          name="expectedRealReturn"
+          ref={register({
+            required: true,
+          })}
+          defaultValue={initialValues.expectedRealReturn}
+          type="range"
+          min="0"
+          max="8"
+          step="0.25"
+        />
+        <output htmlFor="expectedRealReturn">
+          {Number(
+            watch("expectedRealReturn", initialValues.expectedRealReturn)
+          ).toFixed(2)}
+          %
+        </output>
+      </div>
 
       <label htmlFor="expectedInflationRate">Inflation (%)</label>
-      <input
-        name="expectedInflationRate"
-        ref={register({
-          required: true,
-          pattern: /^[0-9/.]*$/,
-        })}
-        defaultValue={initialValues.expectedInflationRate}
-        type="text"
-      />
-      {errors.expectedInflationRate && <p>Between 0 and 100</p>}
+      <div className="slider">
+        <input
+          name="expectedInflationRate"
+          ref={register({
+            required: true,
+          })}
+          defaultValue={initialValues.expectedInflationRate}
+          type="range"
+          min="0"
+          max="8"
+          step="0.25"
+        />
+        <output htmlFor="expectedInflationRate">
+          {Number(
+            watch("expectedInflationRate", initialValues.expectedInflationRate)
+          ).toFixed(2)}
+          %
+        </output>
+      </div>
 
       <div className="radio">
         <input

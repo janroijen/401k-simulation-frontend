@@ -16,7 +16,7 @@ const initialValues: IAssumptions = {
   startBalance: "500,000",
   annualContribution: "10,000",
   currentAge: 50,
-  startAge: 60,
+  startAge: 65,
   finalAge: 99,
   withdrawalRate: 3,
   expectedRealReturn: 2,
