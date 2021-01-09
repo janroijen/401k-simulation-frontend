@@ -4,10 +4,12 @@ import styled from "styled-components";
 import colors from "../styles/colors";
 import Table from "./table";
 import LineGraph from "./line-graph";
+import BarChart from "./bar-chart";
+import HelpInfo from "./help-info";
 
 interface ReportChoices {
   report: "income" | "wealth";
-  format: "table" | "line-graph";
+  format: "table" | "bar-chart" | "line-graph";
 }
 
 const Report401k = () => {
@@ -80,6 +82,11 @@ const StyledSelection = styled.div`
     border-color: ${colors.tints[3]};
     border-width: 6px;
   }
+
+  .help-icon {
+    margin-right: 5px;
+    margin-left: auto;
+  }
 `;
 
 interface ISelectionButtonProps {
@@ -122,11 +129,19 @@ const SelectionButtons = ({
         <input
           type="radio"
           name="format"
+          value="bar-chart"
+          defaultChecked={selection.format === "bar-chart"}
+          onChange={() => handleSelection({ format: "bar-chart" })}
+        />
+        <label htmlFor="format">Bar Chart</label>
+        <input
+          type="radio"
+          name="format"
           value="line-graph"
           defaultChecked={selection.format === "line-graph"}
           onChange={() => handleSelection({ format: "line-graph" })}
         />
-        <label htmlFor="format">Line Graph</label>
+        <label htmlFor="format">Line Chart</label>
         <input
           type="radio"
           name="format"
@@ -135,6 +150,9 @@ const SelectionButtons = ({
           onChange={() => handleSelection({ format: "table" })}
         />
         <label htmlFor="format">Table</label>
+      </div>
+      <div className="help-icon">
+        <HelpInfo />
       </div>
     </StyledSelection>
   );
@@ -224,8 +242,8 @@ const Switch = ({ data, choice }: { data: any; choice: ReportChoices }) => {
       };
       elem = <Table data={wealthTable} />;
       break;
-    case "wealth-line-graph":
-      const balanceGraphDef = {
+    case "wealth-line-graph": {
+      const chartDef = {
         title: "Account balances ($)",
         xaxis: { label: "Age", data: data.age },
         yaxes: [
@@ -257,13 +275,14 @@ const Switch = ({ data, choice }: { data: any; choice: ReportChoices }) => {
           left: 64,
         },
       };
-      elem = <LineGraph graphDef={balanceGraphDef} />;
+      elem = <LineGraph graphDef={chartDef} />;
       break;
-    case "income-line-graph":
+    }
+    case "income-line-graph": {
       const age = data.age as number[];
       const targetIncome = data.withdrawal.target as number[];
       const actualIncome = data.withdrawal.actual as number[];
-      const incomeGraphDef = {
+      const chartDef = {
         title: "Income ($)",
         xaxis: {
           label: "Age",
@@ -294,8 +313,76 @@ const Switch = ({ data, choice }: { data: any; choice: ReportChoices }) => {
           left: 64,
         },
       };
-      elem = <LineGraph graphDef={incomeGraphDef} />;
+      elem = <LineGraph graphDef={chartDef} />;
       break;
+    }
+    case "wealth-bar-chart": {
+      const chartDef = {
+        title: "Account balances ($)",
+        xaxis: { label: "Age", data: data.age },
+        yaxes: [
+          {
+            label: "Tax deferred account",
+            data: data.taxDeferredAccount.closingBalance,
+            color: colors.tints[8],
+          },
+          {
+            label: "Taxable account",
+            data: data.taxableAccount.closingBalance,
+            color: colors.tints[10],
+          },
+        ],
+        unit: "$",
+        dimensions: { width: 520, height: 450 },
+        margin: {
+          top: 48,
+          right: 32,
+          bottom: 32,
+          left: 64,
+        },
+      };
+      elem = <BarChart graphDef={chartDef} />;
+      break;
+    }
+    case "income-bar-chart": {
+      const age = data.age as number[];
+      const targetIncome = data.withdrawal.target as number[];
+      const excessIncome = data.withdrawal.excess as number[];
+      const chartDef = {
+        title: "Income ($)",
+        xaxis: {
+          label: "Age",
+          data: age,
+        },
+        yaxes: [
+          {
+            label: "Target income",
+            data: targetIncome.map((income, idx) =>
+              age[idx] < data.assumptions.startAge ? 0 : income
+            ),
+            color: colors.tints[8],
+          },
+          {
+            label: "Excess income",
+            data: excessIncome.map((income, idx) =>
+              age[idx] < data.assumptions.startAge ? 0 : income
+            ),
+            color: colors.tints[10],
+          },
+        ],
+        unit: "$",
+        dimensions: { width: 520, height: 450 },
+        margin: {
+          top: 48,
+          right: 32,
+          bottom: 32,
+          left: 64,
+        },
+      };
+
+      elem = <BarChart graphDef={chartDef} />;
+      break;
+    }
   }
 
   return <div className="selected-report">{elem}</div>;
