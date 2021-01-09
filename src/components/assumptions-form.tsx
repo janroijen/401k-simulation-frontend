@@ -27,7 +27,7 @@ const Form = styled.form`
   label.newsection {
     margin-top: 25px;
   }
-  p {
+  p.errors {
     color: #880000;
     text-align: left;
     font-size: 10px;
@@ -35,7 +35,7 @@ const Form = styled.form`
     margin-bottom: 5px;
     height: 10px;
   }
-  p::before {
+  p.errors::before {
     display: inline;
     content: "⚠ ";
   }
@@ -199,8 +199,7 @@ const AssumptionsForm = () => {
         type="text"
         onBlur={() => insertThousandSeparator("startBalance")}
       />
-      {errors.startBalance && <p>Positive balance</p>}
-
+      {errors.startBalance && <p className="errors">Positive balance</p>}
       <label htmlFor="annualContribution">Annual contribution ($)</label>
       <input
         name="annualContribution"
@@ -213,8 +212,7 @@ const AssumptionsForm = () => {
         type="text"
         onBlur={() => insertThousandSeparator("annualContribution")}
       />
-      {errors.annualContribution && <p>Positive balance</p>}
-
+      {errors.annualContribution && <p className="errors">Positive balance</p>}
       <label className="newsection" htmlFor="currentAge">
         Current age (years)
       </label>
@@ -233,7 +231,6 @@ const AssumptionsForm = () => {
           {watch("currentAge", initialValues.currentAge)}
         </output>
       </div>
-
       <label htmlFor="startAge">Retirement age (years)</label>
       <div className="slider">
         <input
@@ -250,7 +247,6 @@ const AssumptionsForm = () => {
           {watch("startAge", initialValues.startAge)}
         </output>
       </div>
-
       <label className="newsection" htmlFor="withdrawalRate">
         Withdrawal rate (%)
       </label>
@@ -273,7 +269,6 @@ const AssumptionsForm = () => {
           %
         </output>
       </div>
-
       <label htmlFor="expectedRealReturn">Real return (%)</label>
       <div className="slider">
         <input
@@ -294,7 +289,6 @@ const AssumptionsForm = () => {
           %
         </output>
       </div>
-
       <label htmlFor="expectedInflationRate">Inflation (%)</label>
       <div className="slider">
         <input
@@ -315,7 +309,6 @@ const AssumptionsForm = () => {
           %
         </output>
       </div>
-
       <div className="radio">
         <input
           type="radio"

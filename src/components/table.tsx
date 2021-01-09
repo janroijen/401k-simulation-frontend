@@ -25,7 +25,6 @@ const StyledTable = styled.div`
   thead th {
     position: sticky;
     top: 0;
-
     background-color: ${colors.tints[11]};
     color: ${colors.tints[0]};
     vertical-align: text-top;
