@@ -28,7 +28,7 @@ const Form = styled.form`
     margin-top: 25px;
   }
   p.errors {
-    color: #880000;
+    color: ${colors.error};
     text-align: left;
     font-size: 10px;
     margin-top: 2px;
@@ -42,6 +42,7 @@ const Form = styled.form`
 
   div.radio {
     display: flex;
+    justify-content: flex-start;
     margin-top: 25px;
   }
   div label {
@@ -68,6 +69,9 @@ const Form = styled.form`
   input[type="radio"]:focus {
     border-color: ${colors.tints[3]};
     border-width: 6px;
+  }
+  input[type="radio"]:first-child {
+    margin-left: 0;
   }
 
   input[type="submit"] {

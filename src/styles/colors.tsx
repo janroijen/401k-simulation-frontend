@@ -21,6 +21,7 @@ const colors = {
     "#edeffb",
     "#ffffff",
   ],
+  error: "#aa0000",
 };
 
 export default colors;

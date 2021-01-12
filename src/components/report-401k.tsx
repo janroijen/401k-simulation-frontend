@@ -18,7 +18,7 @@ const Report401k = () => {
   const [dataInternal, setDataInternal] = useState(data);
   const [selection, setSelection] = useState<ReportChoices>({
     report: "income",
-    format: "line-graph",
+    format: "bar-chart",
   });
 
   // Only update the depicted data when it is available to avoid flickering the

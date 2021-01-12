@@ -49,17 +49,6 @@ const StyledTable = styled.div`
     border-bottom: thin solid ${colors.tints[11]};
   }
 
-  // td:nth-child(2),
-  // td:nth-child(6),
-  // td:nth-child(10) {
-  //   border-right: thin solid ${colors.tints[13]};
-  // }
-
-  // td:nth-child(3),
-  // td:nth-child(10) {
-  //   color: ${colors.tints[1]};
-  // }
-
   td.rightBorder {
     border-right: thin solid ${colors.tints[13]};
   }

@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import { InfoIcon } from "./text-icons";
+import styled from "styled-components";
 import Modal from "./modal";
+import colors from "../styles/colors";
+
+const DisClaimer = styled.p`
+  color: ${colors.error};
+  font-family: monospace;
+  margin-top: 30px;
+`;
 
 const HelpInfo = () => {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   const onOpen = () => setVisible(true);
   const onClose = () => setVisible(false);
@@ -46,6 +54,12 @@ const HelpInfo = () => {
           they are expressed in the purchasing power of today's dollars rather
           than in future year.
         </p>
+        <DisClaimer>
+          <b>Disclaimer</b>: This is a test site. Do not use it for making
+          financial decisions.
+          <br />
+          &#169; J.H. Roijen, 2021.
+        </DisClaimer>
       </Modal>
     </>
   );

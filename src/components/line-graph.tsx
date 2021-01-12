@@ -33,13 +33,23 @@ const LineGraph = ({ graphDef }: { graphDef: LineGraphDefinition }) => {
       return;
     }
 
-    const gDef = { ...graphDef };
-    gDef.dimensions = {
-      width: Math.max(graphDef.dimensions.width, graphRef.current.offsetWidth),
-      height: Math.max(
+    const minAspectRatio = 1;
+    const width = Math.max(
+      graphDef.dimensions.width,
+      graphRef.current.offsetWidth
+    );
+    const height = Math.min(
+      minAspectRatio * width,
+      Math.max(
         graphDef.dimensions.height,
         graphRef.current.parentElement.offsetHeight
-      ),
+      )
+    );
+
+    const gDef = { ...graphDef };
+    gDef.dimensions = {
+      width,
+      height,
     };
 
     drawGraph(graphRef, gDef);
